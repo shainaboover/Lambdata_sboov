@@ -1,11 +1,21 @@
+'''
+This module contains a date_splitter function
+and MySplitter class which performs a train_val_test split
+on a pandas DataFrame
+'''
+
 import pandas as pd
-import numpy as np
+from IPython.display import display
 from sklearn.datasets import load_wine
 from sklearn.model_selection import train_test_split
 
 
 # Function to split dates ("MM/DD/YYYY", etc.) into multiple columns
 def date_splitter(self, date_column_name):
+    '''
+    This function takes column with dates, coverts to pandas datetime
+    format creates separate columns for day, month, and year
+    '''
 
     self[date_column_name] = pd.to_datetime(
                             self[date_column_name],
@@ -19,20 +29,25 @@ def date_splitter(self, date_column_name):
 
 # Train/validate/test split function for a dataframe
 class MySplitter():
-    def __init__(self, df):
-        self.df = df
+    '''
+    This class performs train_val_test split on pandas dataframe
+    and prints out summary statistics
+    '''
+    def __init__(self, dataframe):
+        self.dataframe = df
+
 
     def train_val_test_split(self, features, target,
-                            train_size=0.7, val_size=0.1, 
+                            train_size=0.7, val_size=0.1,
                             test_size=0.2, random_state=None,
                             shuffle=True):
 
         '''
-        This function performs 3 way split useing sklearn train_test_split
+        This function performs 3 way split using sklearn train_test_split
         '''
 
-        X = self[features]
-        y = self[features]
+        X = df[features]
+        y = df[target]
 
         X_train_val, X_test, y_train_val, y_test = train_test_split(
             X, y, test_size=test_size, random_state=random_state, shuffle=shuffle)
@@ -40,7 +55,7 @@ class MySplitter():
         X_train, X_val, y_train, y_val = train_test_split(
             X_train_val, y_train_val, test_size=val_size / (train_size + val_size),
             random_state=random_state, shuffle=shuffle)
-       
+
         return X_train, X_val, X_test, y_train, y_val, y_test
 
 
@@ -69,9 +84,9 @@ if __name__ == '__main__':
     raw_data = load_wine()
     df = pd.DataFrame(data=raw_data['data'], columns=raw_data['feature_names'])
     df['target'] = raw_data['target']
-    
-    
+
+
     # Test the MySplitter Class
-    splitter = MySplitter(df=df, features=['ash', 'hue'], target='target')
-    X_train, X_val, X_test, y_train, y_val, y_test = splitter.train_validation_test_split()
-    splitter.print_split_summary(X_train, X_val, X_test)
+    #splitter = MySplitter(df=df, features=['ash', 'hue'], target='target')
+    #X_train, X_val, X_test, y_train, y_val, y_test = splitter.train_validation_test_split()
+    #splitter.print_split_summary(X_train, X_val, X_test)
